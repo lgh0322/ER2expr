@@ -70,14 +70,14 @@ class BleScanManager {
             val device = result.device
             if (device?.name == null) return;
             scan?.apply {
-                scanReturn(device.name, device)
-            }
-            result.scanRecord?.let {
-                if(isRightScanRecord(it.bytes)){
-                    Log.e("name",result.device.name)
+                if(device.name.contains("DuoEK")){
+                    result.scanRecord?.let {
+                        if(isRightScanRecord(it.bytes)){
+                            scanReturn(device.name, device)
+                        }
+                    }
                 }
             }
-
         }
 
         override fun onBatchScanResults(results: List<ScanResult>) {}
