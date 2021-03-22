@@ -38,8 +38,6 @@ class MainActivity : AppCompatActivity(), BleScanManager.Scan {
                             .retry(15, 100)
                             .done {
                                 Log.i("BLE", "连接成功了.>>.....>>>>")
-
-
                             }
                             .enqueue()
                 }
