@@ -1,4 +1,4 @@
-package com.viatom.er2;
+package com.viatom.er2.blething;
 
 import android.content.Context;
 
@@ -6,9 +6,7 @@ import android.content.Context;
 
 import java.io.File;
 
-public class Constant {
-
-
+public class Gua {
     public final static String[] EcgWay = {"Hand-Hand", "Hand-Chest", "1-Lead", "2-Lead"};
     public final static String[] OxyWay = {"Internal", "External", ""};
     public final static String[] TmpWay = {"Body", "Thing", ""};

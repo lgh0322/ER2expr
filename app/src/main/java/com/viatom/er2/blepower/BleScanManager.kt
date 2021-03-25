@@ -1,4 +1,4 @@
-package com.viatom.er2
+package com.viatom.er2.blepower
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -9,8 +9,6 @@ import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.util.Log
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 import java.util.*
 
 
@@ -37,11 +35,8 @@ class BleScanManager {
         var index = 0
         while (index < scanRecord.size) {
             val length = scanRecord[index++].toInt()
-            //Zero value indicates that we are done with the record now
             if (length == 0) break
             val type = scanRecord[index].toInt()
-            //if the type is zero, then we are pass the significant section of the data,
-            // and we are thud done
             if (type == 0) break
             val data = Arrays.copyOfRange(scanRecord, index + 1, index + length)
             if (data.isNotEmpty()) {
@@ -69,8 +64,10 @@ class BleScanManager {
             super.onScanResult(callbackType, result)
             val device = result.device
             if (device?.name == null) return;
+
             scan?.apply {
                 if(device.name.contains("DuoEK")){
+                    Log.e("fuck",device.name)
                     result.scanRecord?.let {
                         if(isRightScanRecord(it.bytes)){
                             scanReturn(device.name, device)

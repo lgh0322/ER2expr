@@ -1,4 +1,4 @@
-package com.viatom.er2
+package com.viatom.er2.activity
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
@@ -12,7 +12,7 @@ import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-
+import com.viatom.er2.R
 
 
 class PermissionActivity : AppCompatActivity() {

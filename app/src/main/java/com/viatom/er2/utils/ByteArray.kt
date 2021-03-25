@@ -1,4 +1,4 @@
-package com.viatom.checkme.utils
+package com.viatom.er2.utils
 
 
 fun add(ori: ByteArray?, add: ByteArray): ByteArray {

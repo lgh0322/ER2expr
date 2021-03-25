@@ -1,4 +1,4 @@
-package com.viatom.er2
+package com.viatom.er2.blepower
 
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt

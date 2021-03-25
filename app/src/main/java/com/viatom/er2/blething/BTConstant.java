@@ -1,4 +1,4 @@
-package com.viatom.er2;
+package com.viatom.er2.blething;
 
 public class BTConstant {
     public final static int COMMON_PKG_LENGTH = 8;

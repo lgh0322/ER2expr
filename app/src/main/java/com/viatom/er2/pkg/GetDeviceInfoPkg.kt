@@ -1,8 +1,8 @@
 package com.viatom.er2.pkg
 
 
-import com.viatom.er2.BTConstant
-import com.viatom.er2.CRCUtils
+import com.viatom.er2.blething.BTConstant
+import com.viatom.er2.utils.CRCUtils
 import kotlin.experimental.inv
 
 
