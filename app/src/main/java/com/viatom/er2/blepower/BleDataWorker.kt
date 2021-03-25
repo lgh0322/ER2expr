@@ -7,7 +7,7 @@ import com.viatom.er2.blething.BleCmd
 import com.viatom.er2.blething.BleCmd.getRtData
 import com.viatom.er2.blething.BleResponse
 import com.viatom.er2.blething.Formatter
-import com.viatom.er2.blething.Gua.getPathX
+import com.viatom.er2.blething.PathUtil.getPathX
 import com.viatom.er2.pkg.StartReadPkg
 import com.viatom.er2.utils.CRCUtils
 import com.viatom.er2.utils.add

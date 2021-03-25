@@ -4,10 +4,8 @@ import android.content.Context;
 
 import java.io.File;
 
-public class Gua {
-    public final static String[] EcgWay = {"Hand-Hand", "Hand-Chest", "1-Lead", "2-Lead"};
-    public final static String[] OxyWay = {"Internal", "External", ""};
-    public final static String[] TmpWay = {"Body", "Thing", ""};
+public class PathUtil {
+
     public static String filePath;
 
     public static String getPathX(String s) {

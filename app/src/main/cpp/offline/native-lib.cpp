@@ -26,7 +26,7 @@
 
 extern "C"
 JNIEXPORT jshortArray JNICALL
-Java_com_viatom_er2_activity_MainActivity_00024Companion_shortfilter(JNIEnv *env, jobject thiz,
+Java_com_viatom_er2_activity_MainActivity_00024Companion_shortFilter(JNIEnv *env, jobject thiz,
                                                                      jshortArray inShorts) {
 
     short *shortArray;
