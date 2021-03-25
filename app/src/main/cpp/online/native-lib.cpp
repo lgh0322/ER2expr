@@ -51,7 +51,7 @@ Java_com_viatom_er2_activity_MainActivity_00024Companion_filter(JNIEnv *env, job
 
     long length = outputPoints.size();
 
-    jsize size = (jsize) outputPoints.size();
+    auto size = (jsize) outputPoints.size();
     jdoubleArray result = (*env).NewDoubleArray(size);
     (*env).SetDoubleArrayRegion(result, 0, size, arrays);
 

@@ -153,11 +153,11 @@ class MainActivity : AppCompatActivity(), BleScanManager.Scan {
     var da:ArrayList<Float> = ArrayList()
     var currentIndex=0
     val dr=DrawTask()
+    var ccx=0;
     inner class DrawTask() : TimerTask() {
         override fun run() {
-            MainScope().launch {
-                for(k in 0 until 4){
 
+                for(k in 0 until 4){
                     if(da.isNotEmpty()){
                         waveView.data[currentIndex]= (da[0]*200).toInt()
                         da.removeAt(0)
@@ -170,8 +170,11 @@ class MainActivity : AppCompatActivity(), BleScanManager.Scan {
                     }
 
                 }
-                waveView.invalidate()
-            }
+
+                    waveView.invalidate()
+
+
+
         }
     }
 
