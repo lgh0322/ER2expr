@@ -32,6 +32,24 @@ class MainActivity : AppCompatActivity(), BleScanManager.Scan {
     var er2Connect=false
     var prConnect=false
 
+
+
+
+
+    companion object {
+        external fun filter(f: Double, reset: Boolean): DoubleArray?
+
+        external fun shortfilter(shorts: ShortArray?): ShortArray?
+
+        // Used to load the 'native-lib' library on application startup.
+        init {
+            System.loadLibrary("offline-lib");
+            System.loadLibrary("native-lib");
+        }
+    }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -83,8 +101,19 @@ class MainActivity : AppCompatActivity(), BleScanManager.Scan {
             dataScope.launch {
                 val x=bleDataWorker.getData()
                  x.wave.wFs?.let {
+
+
                      for(k in it){
-                         da.add(k)
+                         val doubleArray: DoubleArray? = filter(k.toDouble(), reset = false)
+                         doubleArray?.run {
+                             if(doubleArray.isNotEmpty()){
+                                 for(j in doubleArray){
+                                     da.add(j.toFloat())
+                                 }
+
+                             }
+                         }
+
                      }
                 }
 
