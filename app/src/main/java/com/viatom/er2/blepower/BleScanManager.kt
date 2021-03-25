@@ -18,13 +18,6 @@ class BleScanManager {
     }
 
 
-
-
-
-
-
-
-
     private var bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var leScanner: BluetoothLeScanner
     private var scan: Scan? = null
@@ -51,6 +44,7 @@ class BleScanManager {
         }
         return ret
     }
+
     private fun isRightScanRecord(bytes: ByteArray): Boolean {
         return "4EF301" == parseRecord(bytes)[-1]
     }
@@ -59,17 +53,17 @@ class BleScanManager {
     private val leScanCallback: ScanCallback = object : ScanCallback() {
         override fun onScanResult(
             callbackType: Int,
-            result: ScanResult
+            result: ScanResult,
         ) {
             super.onScanResult(callbackType, result)
             val device = result.device
             if (device?.name == null) return;
 
             scan?.apply {
-                if(device.name.contains("DuoEK")){
-                    Log.e("fuck",device.name)
+                if (device.name.contains("DuoEK")) {
+                    Log.e("fuck", device.name)
                     result.scanRecord?.let {
-                        if(isRightScanRecord(it.bytes)){
+                        if (isRightScanRecord(it.bytes)) {
                             scanReturn(device.name, device)
                         }
                     }

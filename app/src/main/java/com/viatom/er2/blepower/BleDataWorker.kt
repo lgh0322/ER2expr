@@ -21,6 +21,7 @@ import kotlinx.coroutines.sync.withLock
 import no.nordicsemi.android.ble.data.Data
 import java.io.File
 import kotlin.experimental.inv
+
 @ExperimentalUnsignedTypes
 class BleDataWorker {
     private var pool: ByteArray? = null
@@ -41,22 +42,22 @@ class BleDataWorker {
 
 
     companion object {
-        lateinit var gua:Formatter.Er2FileList
+        lateinit var gua: Formatter.Er2FileList
 
-      const  val ER2_CMD_GET_INFO = 0xE1
-      const  val ER2_CMD_RT_DATA = 0x03
-      const  val ER2_CMD_VIBRATE_CONFIG = 0x00
-      const  val ER2_CMD_READ_FILE_LIST = 0xF1
-      const  val ER2_CMD_READ_FILE_START = 0xF2
-      const  val ER2_CMD_READ_FILE_DATA = 0xF3
-      const  val ER2_CMD_READ_FILE_END = 0xF4
-       val fileProgressChannel = Channel<FileProgress>(Channel.CONFLATED)
+        const val ER2_CMD_GET_INFO = 0xE1
+        const val ER2_CMD_RT_DATA = 0x03
+        const val ER2_CMD_VIBRATE_CONFIG = 0x00
+        const val ER2_CMD_READ_FILE_LIST = 0xF1
+        const val ER2_CMD_READ_FILE_START = 0xF2
+        const val ER2_CMD_READ_FILE_DATA = 0xF3
+        const val ER2_CMD_READ_FILE_END = 0xF4
+        val fileProgressChannel = Channel<FileProgress>(Channel.CONFLATED)
     }
 
     data class FileProgress(
-            var name: String = "",
-            var progress: Int = 0,
-            var success: Boolean = false
+        var name: String = "",
+        var progress: Int = 0,
+        var success: Boolean = false,
     )
 
     private val comeData = object : BleDataManager.OnNotifyListener {
@@ -96,8 +97,8 @@ class BleDataWorker {
                 onResponseReceived(bleResponse)
                 val tempBytes: ByteArray? =
                     if (i + 8 + len == bytes.size) null else bytes.copyOfRange(
-                            i + 8 + len,
-                            bytes.size
+                        i + 8 + len,
+                        bytes.size
                     )
 
                 return handleDataPool(tempBytes)
@@ -108,14 +109,11 @@ class BleDataWorker {
     }
 
 
-
-
-
     private fun onResponseReceived(response: BleResponse.Er2Response) {
 
-        when(response.cmd) {
+        when (response.cmd) {
 
-            ER2_CMD_RT_DATA->{
+            ER2_CMD_RT_DATA -> {
                 dataScope.launch {
                     RtChannel.send(BleResponse.RtData(response.content))
                 }
@@ -123,28 +121,28 @@ class BleDataWorker {
             }
 
 
-            ER2_CMD_READ_FILE_LIST->{
-                gua=Formatter.Er2FileList(response.content)
-                Log.e("姑姑2",gua.size.toString())
+            ER2_CMD_READ_FILE_LIST -> {
+                gua = Formatter.Er2FileList(response.content)
+                Log.e("姑姑2", gua.size.toString())
 
             }
 
-            ER2_CMD_READ_FILE_START->{
+            ER2_CMD_READ_FILE_START -> {
                 val fileStart = Formatter.Er2FileSize(response.content)
                 dataScope.launch {
                     fileChannel.send(fileStart.size)
                 }
             }
 
-            ER2_CMD_READ_FILE_END->{
+            ER2_CMD_READ_FILE_END -> {
                 dataScope.launch {
                     fileChannel.send(0)
                 }
             }
 
-            ER2_CMD_READ_FILE_DATA->{
+            ER2_CMD_READ_FILE_DATA -> {
                 dataScope.launch {
-                    Log.e("sdfklj","${response.content.size}")
+                    Log.e("sdfklj", "${response.content.size}")
                     fileDataChannel.send(response.content)
                 }
             }
@@ -152,12 +150,8 @@ class BleDataWorker {
         }
 
     }
-    
-    
-    
-    
-    
-    
+
+
     private fun sendCmd(bs: ByteArray) {
         myBleDataManager.sendCmd(bs)
     }
@@ -194,7 +188,7 @@ class BleDataWorker {
         }
     }
 
-    suspend fun getFileList(){
+    suspend fun getFileList() {
         mutex.withLock {
             val pkg = BleCmd.getFileList()
             sendCmd(pkg)
@@ -202,39 +196,38 @@ class BleDataWorker {
     }
 
 
-    suspend fun getFileStart(b:ByteArray){
+    suspend fun getFileStart(b: ByteArray) {
         mutex.withLock {
-            val pkg = BleCmd.readFileStart(b,0)
+            val pkg = BleCmd.readFileStart(b, 0)
             sendCmd(pkg)
         }
     }
 
 
-    suspend fun getFile(b:ByteArray){
+    suspend fun getFile(b: ByteArray) {
         mutex.withLock {
-            val file=Formatter.Er2FileBuf()
-            file.fileName=b
-            val pkg = BleCmd.readFileStart(b,0)
+            val file = Formatter.Er2FileBuf()
+            file.fileName = b
+            val pkg = BleCmd.readFileStart(b, 0)
             sendCmd(pkg)
-            file.fileSize=fileChannel.receive()
-            Log.e("sdf","sdkjkldsf  ${file.fileSize}")
-            file.filePointer=0
-            while(file.filePointer<file.fileSize){
+            file.fileSize = fileChannel.receive()
+            Log.e("sdf", "sdkjkldsf  ${file.fileSize}")
+            file.filePointer = 0
+            while (file.filePointer < file.fileSize) {
                 sendCmd(BleCmd.readFileData(file.filePointer))
-                val temp=fileDataChannel.receive()
+                val temp = fileDataChannel.receive()
                 file.add(temp)
-                Log.e("dsfs","${file.filePointer}        ${file.fileSize}")
+                Log.e("dsfs", "${file.filePointer}        ${file.fileSize}")
             }
             sendCmd(BleCmd.readFileEnd())
             fileChannel.receive()
-            Log.e("fd","dsf")
+            Log.e("fd", "dsf")
             File(getPathX(file.fileNameString)).writeBytes(file.fileData)
         }
     }
 
 
-
-    suspend fun getData():BleResponse.RtData{
+    suspend fun getData(): BleResponse.RtData {
         mutex.withLock {
             sendCmd(getRtData())
             return RtChannel.receive()

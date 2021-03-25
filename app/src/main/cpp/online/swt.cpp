@@ -20,20 +20,29 @@ static double swd[SWT_FLOOR_NUM][SWT_MAX_SAMPLE_CNT];
 static double swa[SWT_FLOOR_NUM][SWT_MAX_SAMPLE_CNT];
 
 
-static double Lo_R[] = {-0.000720549445364512,-0.00182320887070299,0.00561143481939450,0.0236801719463341,-0.0594344186464569,-0.0764885990783064,0.417005184421693,0.812723635445542,0.386110066821162,-0.0673725547219630,-0.0414649367817592,0.0163873364635221};
-static double Hi_R[] = {-0.0163873364635221,-0.0414649367817592,0.0673725547219630,0.386110066821162,-0.812723635445542,0.417005184421693,0.0764885990783064,-0.0594344186464569,-0.0236801719463341,0.00561143481939450,0.00182320887070299,-0.000720549445364512};
+static double Lo_R[] = {-0.000720549445364512, -0.00182320887070299, 0.00561143481939450,
+                        0.0236801719463341, -0.0594344186464569, -0.0764885990783064,
+                        0.417005184421693, 0.812723635445542, 0.386110066821162,
+                        -0.0673725547219630, -0.0414649367817592, 0.0163873364635221};
+static double Hi_R[] = {-0.0163873364635221, -0.0414649367817592, 0.0673725547219630,
+                        0.386110066821162, -0.812723635445542, 0.417005184421693,
+                        0.0764885990783064, -0.0594344186464569, -0.0236801719463341,
+                        0.00561143481939450, 0.00182320887070299, -0.000720549445364512};
 
-static double Lo_RR[] = {0.0163873364635221,-0.0414649367817592,-0.0673725547219630,0.386110066821162,0.812723635445542,0.417005184421693,-0.0764885990783064,-0.0594344186464569,0.0236801719463341,0.00561143481939450,-0.00182320887070299,-0.000720549445364512};
-static double Hi_RR[] = {-0.000720549445364512,0.00182320887070299,0.00561143481939450,-0.0236801719463341,-0.0594344186464569,0.0764885990783064,0.417005184421693,-0.812723635445542,0.386110066821162,0.0673725547219630,-0.0414649367817592,-0.0163873364635221};
+static double Lo_RR[] = {0.0163873364635221, -0.0414649367817592, -0.0673725547219630,
+                         0.386110066821162, 0.812723635445542, 0.417005184421693,
+                         -0.0764885990783064, -0.0594344186464569, 0.0236801719463341,
+                         0.00561143481939450, -0.00182320887070299, -0.000720549445364512};
+static double Hi_RR[] = {-0.000720549445364512, 0.00182320887070299, 0.00561143481939450,
+                         -0.0236801719463341, -0.0594344186464569, 0.0764885990783064,
+                         0.417005184421693, -0.812723635445542, 0.386110066821162,
+                         0.0673725547219630, -0.0414649367817592, -0.0163873364635221};
 
 
-double SWT::GetExtendedR(int index, int exponent2, double * tableR)
-{
+double SWT::GetExtendedR(int index, int exponent2, double *tableR) {
     int i;
-    for (i = 0; i < FILTER_INI_LEN; i++)
-    {
-        if (index == i * exponent2)
-        {
+    for (i = 0; i < FILTER_INI_LEN; i++) {
+        if (index == i * exponent2) {
             return tableR[i];
         }
     }
@@ -41,44 +50,33 @@ double SWT::GetExtendedR(int index, int exponent2, double * tableR)
     return 0;
 }
 
-int SWT::IntMatlabMod(int x, int y)
-{
-    if (y == 0)
-    {
+int SWT::IntMatlabMod(int x, int y) {
+    if (y == 0) {
         return x;
     }
 
-    if (x == y)
-    {
+    if (x == y) {
         return 0;
     }
 
-    return (int)((double)x - floor((double)x / (double)y) * (double)y);
+    return (int) ((double) x - floor((double) x / (double) y) * (double) y);
 }
 
 
-int SWT::MapExtendedIndex(int index, int extendLen, int sampleCnt)
-{
+int SWT::MapExtendedIndex(int index, int extendLen, int sampleCnt) {
     int tempInt = 1;
 
-    if (index < extendLen / 2)
-    {
+    if (index < extendLen / 2) {
         tempInt = sampleCnt - extendLen / 2 + index + 1;
-    }
-    else if (index >= extendLen / 2 && index < extendLen / 2 + sampleCnt)
-    {
+    } else if (index >= extendLen / 2 && index < extendLen / 2 + sampleCnt) {
         tempInt = index - extendLen / 2 + 1;
-    }
-    else if (index >= extendLen / 2 + sampleCnt)
-    {
+    } else if (index >= extendLen / 2 + sampleCnt) {
         tempInt = index - extendLen / 2 - sampleCnt + 1;
     }
 
-    if (extendLen/2 > sampleCnt)
-    {
+    if (extendLen / 2 > sampleCnt) {
         tempInt = IntMatlabMod(tempInt, sampleCnt);
-        if (tempInt == 0)
-        {
+        if (tempInt == 0) {
             tempInt = sampleCnt;
         }
     }
@@ -88,8 +86,8 @@ int SWT::MapExtendedIndex(int index, int extendLen, int sampleCnt)
 }
 
 
-void SWT::idwtLOC(double a[], double d[], int lon, int lo_Rl,int flag,double y[], int step_RR, int step_RRj)
-{
+void SWT::idwtLOC(double a[], double d[], int lon, int lo_Rl, int flag, double y[], int step_RR,
+                  int step_RRj) {
     int j;
     int k;
     double tp1;
@@ -97,26 +95,19 @@ void SWT::idwtLOC(double a[], double d[], int lon, int lo_Rl,int flag,double y[]
     int index;
 //    double tmpSwap;
 
-    for (j = lo_Rl-1; j < lon+lo_Rl-1; j++)
-    {
+    for (j = lo_Rl - 1; j < lon + lo_Rl - 1; j++) {
         tp1 = 0;
         tp2 = 0;
-        for (k = 0; k < lon+lo_Rl; k++)
-        {
-            if ((j - k) >= 0 && (j - k) < lo_Rl)
-            {
+        for (k = 0; k < lon + lo_Rl; k++) {
+            if ((j - k) >= 0 && (j - k) < lo_Rl) {
                 index = MapExtendedIndex(k, lo_Rl, lon);
-                if (index % 2 == 0)
-                {
-                    if (flag == -1)
-                    {
-                        tp1 += a[step_RRj + step_RR*(1+index)] * Lo_RR[j - k];
-                        tp2 += d[step_RRj + step_RR*(1+index)] * Hi_RR[j - k];
-                    }
-                    else
-                    {
-                        tp1 += a[step_RRj + step_RR*index] * Lo_RR[j - k];
-                        tp2 += d[step_RRj + step_RR*index] * Hi_RR[j - k];
+                if (index % 2 == 0) {
+                    if (flag == -1) {
+                        tp1 += a[step_RRj + step_RR * (1 + index)] * Lo_RR[j - k];
+                        tp2 += d[step_RRj + step_RR * (1 + index)] * Hi_RR[j - k];
+                    } else {
+                        tp1 += a[step_RRj + step_RR * index] * Lo_RR[j - k];
+                        tp2 += d[step_RRj + step_RR * index] * Hi_RR[j - k];
                     }
                 }
 
@@ -124,20 +115,14 @@ void SWT::idwtLOC(double a[], double d[], int lon, int lo_Rl,int flag,double y[]
             }
         }
 
-        if (flag == -1)
-        {
-            if (j - lo_Rl+1 == lon-1)
-            {
+        if (flag == -1) {
+            if (j - lo_Rl + 1 == lon - 1) {
                 y[0] = tp1 + tp2;
+            } else {
+                y[j - lo_Rl + 1 + 1] = tp1 + tp2;
             }
-            else
-            {
-                y[j - lo_Rl+1+1] = tp1 + tp2;
-            }
-        }
-        else
-        {
-            y[j - lo_Rl+1] = tp1 + tp2;
+        } else {
+            y[j - lo_Rl + 1] = tp1 + tp2;
         }
     }
 
@@ -145,28 +130,23 @@ void SWT::idwtLOC(double a[], double d[], int lon, int lo_Rl,int flag,double y[]
 }
 
 
-int SWT::MyPow(int di, int zhi)
-{
+int SWT::MyPow(int di, int zhi) {
     int i;
     int res = 1;
 
-    for (i = 0; i < zhi; i++)
-    {
+    for (i = 0; i < zhi; i++) {
         res *= di;
     }
 
     return res;
 }
 
-int SWT::GetSenarios(double x1, double x2, double x3)
-{
-    if (1 == DoubleIsTooNear(x1, x2))
-    {
+int SWT::GetSenarios(double x1, double x2, double x3) {
+    if (1 == DoubleIsTooNear(x1, x2)) {
         return 1;
     }
 
-    if (1 == DoubleIsTooNear(x2, x3))
-    {
+    if (1 == DoubleIsTooNear(x2, x3)) {
         return 2;
     }
 
@@ -174,8 +154,7 @@ int SWT::GetSenarios(double x1, double x2, double x3)
 
 }
 
-void SWT::SamplesToSwdSwa(double * samples, int sampleCnt)
-{
+void SWT::SamplesToSwdSwa(double *samples, int sampleCnt) {
     int i = 0;
     int j = 0;
     int k = 0;
@@ -185,30 +164,27 @@ void SWT::SamplesToSwdSwa(double * samples, int sampleCnt)
     int exponent2Multi8;
 
     //the process of swt
-    for (i = 0; i < SWT_FLOOR_NUM; i++)
-    {
+    for (i = 0; i < SWT_FLOOR_NUM; i++) {
 //        exponent2 = (int) pow(2, i);
         exponent2 = MyPow(2, i);
         exponent2Multi8 = FILTER_INI_LEN * exponent2;
 
-        for (j = exponent2Multi8; j < sampleCnt + exponent2Multi8; j++)
-        {
+        for (j = exponent2Multi8; j < sampleCnt + exponent2Multi8; j++) {
             tp1 = 0;
             tp2 = 0;
-            for (k = 0; k < sampleCnt + exponent2Multi8; k++)
-            {
-                if ((j - k) >= 0 && (j - k) < exponent2Multi8)
-                {
-                    tp1 += samples[MapExtendedIndex(k, exponent2Multi8, sampleCnt)] * GetExtendedR(j - k, exponent2, Hi_R);
-                    tp2 += samples[MapExtendedIndex(k, exponent2Multi8, sampleCnt)] * GetExtendedR(j - k, exponent2, Lo_R);
+            for (k = 0; k < sampleCnt + exponent2Multi8; k++) {
+                if ((j - k) >= 0 && (j - k) < exponent2Multi8) {
+                    tp1 += samples[MapExtendedIndex(k, exponent2Multi8, sampleCnt)] *
+                           GetExtendedR(j - k, exponent2, Hi_R);
+                    tp2 += samples[MapExtendedIndex(k, exponent2Multi8, sampleCnt)] *
+                           GetExtendedR(j - k, exponent2, Lo_R);
                 }
             }
             swd[i][j - exponent2Multi8] = tp1;
             swa[i][j - exponent2Multi8] = tp2;
         }
 
-        for (j = 0; j < sampleCnt; j++)
-        {
+        for (j = 0; j < sampleCnt; j++) {
             samples[j] = swa[i][j];
         }
 
@@ -216,8 +192,7 @@ void SWT::SamplesToSwdSwa(double * samples, int sampleCnt)
 }
 
 
-void SWT::CutSwd(int sampleCnt)
-{
+void SWT::CutSwd(int sampleCnt) {
 
 //    double xPercent[SWT_FLOOR_NUM];
 //    double wPercent[SWT_FLOOR_NUM];
@@ -256,22 +231,17 @@ void SWT::CutSwd(int sampleCnt)
     arrayForOrder.resize(sampleCnt);
 
 
-    for (i = 0; i < SWT_FLOOR_NUM; i++)
-    {
-        for (j = 0; j < sampleCnt; j++)
-        {
+    for (i = 0; i < SWT_FLOOR_NUM; i++) {
+        for (j = 0; j < sampleCnt; j++) {
             absX = fabs(swd[i][j]);
             arrayForOrder[j] = absX;
         }
 
         sort(arrayForOrder.begin(), arrayForOrder.end());
 
-        if(sampleCnt % 2 == 0)
-        {
-            lamda = (arrayForOrder[sampleCnt / 2-1] + arrayForOrder[sampleCnt / 2]) / 2;
-        }
-        else
-        {
+        if (sampleCnt % 2 == 0) {
+            lamda = (arrayForOrder[sampleCnt / 2 - 1] + arrayForOrder[sampleCnt / 2]) / 2;
+        } else {
             lamda = arrayForOrder[sampleCnt / 2];
         }
 
@@ -295,15 +265,11 @@ void SWT::CutSwd(int sampleCnt)
 //
 //        senarios = GetSenarios(x1, x2, x3);
 
-        for (j = 0; j < sampleCnt; j++)
-        {
+        for (j = 0; j < sampleCnt; j++) {
             absX = fabs(swd[i][j]);
-            if (-1 != DoubleCompares(absX, lamda) )
-            {
+            if (-1 != DoubleCompares(absX, lamda)) {
                 continue;
-            }
-            else
-            {
+            } else {
                 swd[i][j] = 0;
 
             }
@@ -383,8 +349,7 @@ void SWT::CutSwd(int sampleCnt)
     return;
 }
 
-void SWT::SwdSwaToSamples(double * samples, int sampleCnt)
-{
+void SWT::SwdSwaToSamples(double *samples, int sampleCnt) {
     int i = 0;
     int j = 0;
     int k = 0;
@@ -396,8 +361,7 @@ void SWT::SwdSwaToSamples(double * samples, int sampleCnt)
     for (i = 0; i < sampleCnt; i++)
         samples[i] = swa[SWT_FLOOR_NUM - 1][i];
 
-    for (i = SWT_FLOOR_NUM - 1; i >= 0; i--)
-    {
+    for (i = SWT_FLOOR_NUM - 1; i >= 0; i--) {
 #if 0
         sprintf(input, "f:\\123\\filt_%d.data", i);
         FILE *fpfilt123 = fopen(input, "wb+");
@@ -414,17 +378,15 @@ void SWT::SwdSwaToSamples(double * samples, int sampleCnt)
 
 //        step_RR = (int)pow(2, i);
         step_RR = MyPow(2, i);
-        for (j = 0; j < step_RR; j++)
-        {
+        for (j = 0; j < step_RR; j++) {
             int lon_RR = sampleCnt / step_RR;
 
-            idwtLOC(samples, swd[i], lon_RR, FILTER_INI_LEN,1, swa[0], step_RR, j);
+            idwtLOC(samples, swd[i], lon_RR, FILTER_INI_LEN, 1, swa[0], step_RR, j);
 
-            idwtLOC(samples, swd[i], lon_RR, FILTER_INI_LEN,-1, swa[1], step_RR, j);
+            idwtLOC(samples, swd[i], lon_RR, FILTER_INI_LEN, -1, swa[1], step_RR, j);
 
-            for (k = 0; k < lon_RR; k++)
-            {
-                samples[j + step_RR * k] = 0.5*(swa[0][k] + swa[1][k]);
+            for (k = 0; k < lon_RR; k++) {
+                samples[j + step_RR * k] = 0.5 * (swa[0][k] + swa[1][k]);
             }
         }
     }
@@ -433,12 +395,9 @@ void SWT::SwdSwaToSamples(double * samples, int sampleCnt)
 }
 
 
+void SWT::EcgSwt(double *samples, int sampleCnt) {
 
-void SWT::EcgSwt(double * samples, int sampleCnt)
-{
-
-    if (sampleCnt > SWT_MAX_SAMPLE_CNT)
-    {
+    if (sampleCnt > SWT_MAX_SAMPLE_CNT) {
         return;
     }
 
@@ -469,30 +428,26 @@ void SWT::EcgSwt(double * samples, int sampleCnt)
 }
 
 
-void SWT::AnalyzeSwt(deque <double> & samples)
-{
+void SWT::AnalyzeSwt(deque<double> &samples) {
     int i;
 
-    if (samples.size() != SWT_MAX_SAMPLE_CNT)
-    {
+    if (samples.size() != SWT_MAX_SAMPLE_CNT) {
         return;
     }
 
-    double * samplesPtr = new double[samples.size()];
+    double *samplesPtr = new double[samples.size()];
 
-    for (i = 0; i < samples.size(); ++i)
-    {
+    for (i = 0; i < samples.size(); ++i) {
         samplesPtr[i] = samples[i];
     }
 
     EcgSwt(samplesPtr, samples.size());
 
-    for (i = 0; i < samples.size(); ++i)
-    {
+    for (i = 0; i < samples.size(); ++i) {
         samples[i] = samplesPtr[i];
     }
 
-    delete [] samplesPtr;
+    delete[] samplesPtr;
 }
 
 

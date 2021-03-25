@@ -17,6 +17,7 @@ public class BleCmd {
     public static String ACTION_ER2_RT_DATA = "com.lepu.ble_ER2_rtData";
 
     private static int seqNo = 0;
+
     private static void addNo() {
         seqNo++;
         if (seqNo >= 255) {
@@ -25,11 +26,10 @@ public class BleCmd {
     }
 
 
-
     public static byte[] getRtData() {
         int len = 1;
 
-        byte[] cmd = new byte[8+len];
+        byte[] cmd = new byte[8 + len];
         cmd[0] = (byte) 0xA5;
         cmd[1] = (byte) 0x03;
         cmd[2] = (byte) ~0x03;
@@ -47,7 +47,7 @@ public class BleCmd {
     public static byte[] getInfo() {
         int len = 0;
 
-        byte[] cmd = new byte[8+len];
+        byte[] cmd = new byte[8 + len];
         cmd[0] = (byte) 0xA5;
         cmd[1] = (byte) 0xE1;
         cmd[2] = (byte) ~0xE1;
@@ -62,10 +62,10 @@ public class BleCmd {
         return cmd;
     }
 
-    public static byte[] setVibrate(boolean on1,int threshold1, int threshold2) {
+    public static byte[] setVibrate(boolean on1, int threshold1, int threshold2) {
         int len = 3;
 
-        byte[] cmd = new byte[8+len];
+        byte[] cmd = new byte[8 + len];
         cmd[0] = (byte) 0xA5;
         cmd[1] = (byte) 0x04;
         cmd[2] = (byte) ~0x04;
@@ -73,9 +73,9 @@ public class BleCmd {
         cmd[4] = (byte) seqNo;
         cmd[5] = (byte) 0x03;
         cmd[6] = (byte) 0x00;
-        if(on1){
+        if (on1) {
             cmd[7] = (byte) 0x01;
-        }else{
+        } else {
             cmd[7] = (byte) 0x00;
         }
 
@@ -85,10 +85,11 @@ public class BleCmd {
         addNo();
         return cmd;
     }
+
     public static byte[] getRtWaveData() {
         int len = 1;
 
-        byte[] cmd = new byte[8+len];
+        byte[] cmd = new byte[8 + len];
         cmd[0] = (byte) 0xA5;
         cmd[1] = (byte) 0x01;
         cmd[2] = (byte) ~0x01;
@@ -106,7 +107,7 @@ public class BleCmd {
     public static byte[] getVibrateConfig() {
         int len = 0;
 
-        byte[] cmd = new byte[8+len];
+        byte[] cmd = new byte[8 + len];
         cmd[0] = (byte) 0xA5;
         cmd[1] = (byte) 0x00;
         cmd[2] = (byte) ~0x00;
@@ -123,7 +124,7 @@ public class BleCmd {
     public static byte[] getFileList() {
         int len = 0;
 
-        byte[] cmd = new byte[8+len];
+        byte[] cmd = new byte[8 + len];
         cmd[0] = (byte) 0xA5;
         cmd[1] = (byte) 0xF1;
         cmd[2] = (byte) ~0xF1;
@@ -135,10 +136,11 @@ public class BleCmd {
         addNo();
         return cmd;
     }
-    public static byte[] readFileStart(byte[] name,int offset) {
+
+    public static byte[] readFileStart(byte[] name, int offset) {
         int len = 20;
 
-        byte[] cmd = new byte[8+len];
+        byte[] cmd = new byte[8 + len];
         cmd[0] = (byte) 0xA5;
         cmd[1] = (byte) 0xF2;
         cmd[2] = (byte) ~0xF2;
@@ -146,13 +148,13 @@ public class BleCmd {
         cmd[4] = (byte) seqNo;
         cmd[5] = (byte) 0x14;
         cmd[6] = (byte) 0x00;
-        int k=0;
-        for(k=0;k<16;k++){
-            cmd[7+k]=name[k];
+        int k = 0;
+        for (k = 0; k < 16; k++) {
+            cmd[7 + k] = name[k];
         }
-        byte[] temp=intToByteArray(offset);
-        for(k=0;k<4;k++){
-            cmd[23+k]=temp[k];
+        byte[] temp = intToByteArray(offset);
+        for (k = 0; k < 4; k++) {
+            cmd[23 + k] = temp[k];
         }
         cmd[27] = calCRC8(cmd);
         addNo();
@@ -162,15 +164,16 @@ public class BleCmd {
 
     public static byte[] intToByteArray(int i) {
         byte[] result = new byte[4];
-        result[3] = (byte)((i >> 24) & 0xFF);
-        result[2] = (byte)((i >> 16) & 0xFF);
-        result[1] = (byte)((i >> 8) & 0xFF);
-        result[0] = (byte)(i & 0xFF);
+        result[3] = (byte) ((i >> 24) & 0xFF);
+        result[2] = (byte) ((i >> 16) & 0xFF);
+        result[1] = (byte) ((i >> 8) & 0xFF);
+        result[0] = (byte) (i & 0xFF);
         return result;
     }
+
     public static byte[] readFileData(int addr_offset) {
         int len = 4;
-        byte[] cmd = new byte[8+len];
+        byte[] cmd = new byte[8 + len];
         cmd[0] = (byte) 0xA5;
         cmd[1] = (byte) 0xF3;
         cmd[2] = (byte) ~0xF3;
@@ -179,18 +182,19 @@ public class BleCmd {
         cmd[5] = (byte) 0x04;
         cmd[6] = (byte) 0x00;
         int k;
-        byte[] temp=intToByteArray(addr_offset);
-        for(k=0;k<4;k++){
-            cmd[7+k]=temp[k];
+        byte[] temp = intToByteArray(addr_offset);
+        for (k = 0; k < 4; k++) {
+            cmd[7 + k] = temp[k];
         }
 
         cmd[11] = calCRC8(cmd);
         addNo();
         return cmd;
     }
+
     public static byte[] readFileEnd() {
         int len = 0;
-        byte[] cmd = new byte[8+len];
+        byte[] cmd = new byte[8 + len];
         cmd[0] = (byte) 0xA5;
         cmd[1] = (byte) 0xF4;
         cmd[2] = (byte) ~0xF4;

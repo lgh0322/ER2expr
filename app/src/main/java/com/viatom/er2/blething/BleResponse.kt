@@ -5,7 +5,7 @@ import com.viatom.er2.utils.toUInt
 
 @ExperimentalUnsignedTypes
 object BleResponse {
-    class Er2Response  (var bytes: ByteArray){
+    class Er2Response(var bytes: ByteArray) {
         var cmd: Int = (bytes[1].toUInt() and 0xFFu).toInt()
         var pkgType: Byte = bytes[3]
         var pkgNo: Int = (bytes[4].toUInt() and 0xFFu).toInt()
@@ -15,8 +15,7 @@ object BleResponse {
     }
 
 
-
-    class RtData (var bytes: ByteArray)  {
+    class RtData(var bytes: ByteArray) {
         var content: ByteArray = bytes
         var param: RtParam = RtParam(bytes.copyOfRange(0, 20))
         var wave: RtWave = RtWave(bytes.copyOfRange(20, bytes.size))
@@ -24,7 +23,7 @@ object BleResponse {
     }
 
 
-    class RtParam (var bytes: ByteArray)  {
+    class RtParam(var bytes: ByteArray) {
         var hr: Int = toUInt(bytes.copyOfRange(0, 2))
         var sysFlag: Byte = bytes[2]
         var battery: Int = (bytes[3].toUInt() and 0xFFu).toInt()
@@ -43,11 +42,11 @@ object BleResponse {
     }
 
 
-    class RtWave (var bytes: ByteArray){
+    class RtWave(var bytes: ByteArray) {
         var content: ByteArray = bytes
         var len: Int = toUInt(bytes.copyOfRange(0, 2))
         var wave: ByteArray = bytes.copyOfRange(2, bytes.size)
-        var wFs : FloatArray? = null
+        var wFs: FloatArray? = null
 
         init {
             wFs = FloatArray(len)

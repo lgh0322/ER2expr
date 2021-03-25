@@ -2,13 +2,19 @@ package com.viatom.er2.blething;
 
 import android.text.TextUtils;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 class DateConvert {
+    /**
+     * 时分秒
+     * 防止多数据加载慢情况
+     */
+    private static Date mDate;
+    private static SimpleDateFormat dateFormat;
+
     public static String getDateTime(Date date, String pattern) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.US);
         String dateStr = simpleDateFormat.format(date);
@@ -70,16 +76,16 @@ class DateConvert {
         int recordSecond = recordingTime % 60;
 
         String recordHourStr = String.valueOf(recordHour);
-        if(recordMinute < 10) {
+        if (recordMinute < 10) {
             recordHourStr = "0".concat(recordHourStr);
         }
 
         String recordMinuteStr = String.valueOf(recordMinute);
-        if(recordMinute < 10) {
+        if (recordMinute < 10) {
             recordMinuteStr = "0".concat(recordMinuteStr);
         }
         String recordSecondStr = String.valueOf(recordSecond);
-        if(recordSecond < 10) {
+        if (recordSecond < 10) {
             recordSecondStr = "0".concat(recordSecondStr);
         }
 
@@ -96,10 +102,10 @@ class DateConvert {
         String recordSecondStr = String.valueOf(recordSecond);
 
         String recordTime = "";
-        if(recordHour > 0) {
+        if (recordHour > 0) {
             recordTime = recordTime.concat(recordHourStr.concat("h"));
         }
-        if(recordMinute > 0 || !TextUtils.isEmpty(recordTime)) {
+        if (recordMinute > 0 || !TextUtils.isEmpty(recordTime)) {
             recordTime = recordTime.concat(recordMinuteStr.concat("m"));
         }
         recordTime = recordTime.concat(recordSecondStr.concat("s"));
@@ -111,7 +117,7 @@ class DateConvert {
     }
 
     public static String getRecordTime(int recordingTime, String sep, boolean ignoreHour) {
-        if(recordingTime < 0) {
+        if (recordingTime < 0) {
             return "00".concat(sep).concat("00").concat(sep).concat("00");
         }
         int recordHour = recordingTime / 3600;
@@ -119,20 +125,20 @@ class DateConvert {
         int recordSecond = (recordingTime % 3600) % 60;
 
         String recordHourStr = String.valueOf(recordHour);
-        if(recordHour < 10) {
+        if (recordHour < 10) {
             recordHourStr = "0" + recordHourStr;
         }
         String recordMinuteStr = String.valueOf(recordMinute);
-        if(recordMinute < 10) {
+        if (recordMinute < 10) {
             recordMinuteStr = "0" + recordMinuteStr;
         }
         String recordSecondStr = String.valueOf(recordSecond);
-        if(recordSecond < 10) {
+        if (recordSecond < 10) {
             recordSecondStr = "0" + recordSecondStr;
         }
 
         String recordTime = "";
-        if(recordHour > 0 || !ignoreHour) {
+        if (recordHour > 0 || !ignoreHour) {
             recordTime = recordTime.concat(recordHourStr.concat(sep));
         }
         recordTime = recordTime.concat(recordMinuteStr.concat(sep));
@@ -140,7 +146,7 @@ class DateConvert {
         return recordTime;
     }
 
-    public static String secondToMinute(int second, String hStr, String mStr ) {
+    public static String secondToMinute(int second, String hStr, String mStr) {
         int m = second / 60;
         if (m < 60) {
             return m + mStr;
@@ -150,12 +156,6 @@ class DateConvert {
         return h + hStr + m + mStr;
     }
 
-    /**
-     * 时分秒
-     * 防止多数据加载慢情况
-     */
-    private static Date mDate;
-    private static SimpleDateFormat dateFormat;
     public static String longToTimeStr(Long startTime, boolean isType) {
         if (null == mDate) {
             mDate = new Date();
@@ -190,10 +190,10 @@ class DateConvert {
 
     }
 
-    public static int spanDay(Long time1, Long time2){
-        SimpleDateFormat format=new SimpleDateFormat("D");
+    public static int spanDay(Long time1, Long time2) {
+        SimpleDateFormat format = new SimpleDateFormat("D");
         int day1 = Integer.parseInt(format.format(timeInMillisToDate(time1)));
         int day2 = Integer.parseInt(format.format(timeInMillisToDate(time2)));
-        return Math.abs(day1 -day2);
+        return Math.abs(day1 - day2);
     }
 }

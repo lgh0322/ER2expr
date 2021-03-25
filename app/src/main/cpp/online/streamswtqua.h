@@ -12,11 +12,11 @@
 
 using namespace std;
 
-class StreamSwtQua
-{
+class StreamSwtQua {
 public:
 
-    void GetEcgData(double sample, deque <double> & outputPoints);
+    void GetEcgData(double sample, deque<double> &outputPoints);
+
 private:
     SWT swtCollection;
 
@@ -25,18 +25,20 @@ private:
     int bufLen;
     double buf[SWT_MAX_SAMPLE_CNT_ONCE];
 
-    double bufMid[SWT_MAX_SAMPLE_CNT_ONCE/2];
+    double bufMid[SWT_MAX_SAMPLE_CNT_ONCE / 2];
     int isFirstBuf;
 private:
     void AnalyzeOurBuf();
+
 public:
     void ResetMe();
+
 public:
     StreamSwtQua();
+
     ~StreamSwtQua();
 
 };
-
 
 
 #endif //DENOISE_STREAMSWTQUA_H

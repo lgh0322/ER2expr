@@ -45,7 +45,7 @@ class PermissionActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         when (requestCode) {
             permissionRequestCode -> if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {

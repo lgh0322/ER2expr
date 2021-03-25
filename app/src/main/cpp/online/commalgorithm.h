@@ -31,7 +31,7 @@ double StringToDouble(string str);
 //
 //int StringToInt(string str);
 
-void DoubleToString(double doubleNum, string & str);
+void DoubleToString(double doubleNum, string &str);
 
 //void StringDoubleToIntString(string & str);
 //
@@ -62,8 +62,7 @@ int DoubleIsTooNear(double doubleNum1, double doubleNum2);
 //void JiaoyanSignal(deque<double >&x,deque<int>&loc1,deque<int>&loc2);
 
 
-class DataStreamStatistic
-{
+class DataStreamStatistic {
 public:
     void ResetMe();
 
@@ -84,8 +83,6 @@ private:
 public:
     DataStreamStatistic();
 };
-
-
 
 
 #endif //DENOISE_COMMALGORITHM_H

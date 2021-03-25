@@ -2,8 +2,6 @@ package com.viatom.er2.blething;
 
 import android.content.Context;
 
-
-
 import java.io.File;
 
 public class Gua {

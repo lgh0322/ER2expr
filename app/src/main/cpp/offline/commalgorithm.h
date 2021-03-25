@@ -20,15 +20,13 @@ double DoubleTripToZero(double doubleNum);
 
 double StringToDouble(string str);
 
-void DoubleToString(double doubleNum, string & str);
+void DoubleToString(double doubleNum, string &str);
 
 
 int DoubleIsTooNear(double doubleNum1, double doubleNum2);
 
 
-
-class DataStreamStatistic
-{
+class DataStreamStatistic {
 public:
     void ResetMe();
 
@@ -49,8 +47,6 @@ private:
 public:
     DataStreamStatistic();
 };
-
-
 
 
 #endif

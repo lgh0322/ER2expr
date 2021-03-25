@@ -1,21 +1,18 @@
 package com.viatom.er2.activity
 
 import android.bluetooth.BluetoothDevice
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import com.viatom.er2.R
 import com.viatom.er2.blepower.BleDataManager
 import com.viatom.er2.blepower.BleDataWorker
 import com.viatom.er2.blepower.BleScanManager
-import com.viatom.er2.R
-import com.viatom.er2.blething.BleCmd.getRtData
 import com.viatom.er2.blething.Gua
 import com.viatom.er2.view.WaveView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
@@ -27,13 +24,10 @@ class MainActivity : AppCompatActivity(), BleScanManager.Scan {
     private lateinit var myBleDataManager: BleDataManager
     lateinit var waveView: WaveView
     private val bleDataWorker: BleDataWorker = BleDataWorker()
-    lateinit var er2:BluetoothDevice
-    lateinit var pr:BluetoothDevice
-    var er2Connect=false
-    var prConnect=false
-
-
-
+    lateinit var er2: BluetoothDevice
+    lateinit var pr: BluetoothDevice
+    var er2Connect = false
+    var prConnect = false
 
 
     companion object {
@@ -49,32 +43,32 @@ class MainActivity : AppCompatActivity(), BleScanManager.Scan {
     }
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        waveView=findViewById(R.id.wave)
+        waveView = findViewById(R.id.wave)
         Gua.initVar(this)
         initScan()
 
 
         myBleDataManager = BleDataManager(this)
     }
+
     private fun initScan() {
         scan.initScan(this)
         scan.setCallBack(this)
     }
 
     override fun scanReturn(name: String, bluetoothDevice: BluetoothDevice) {
-        if(name.contains("DuoEK")){
+        if (name.contains("DuoEK")) {
             scan.stop()
-            if(!er2Connect){
-                er2Connect=true
-                er2=bluetoothDevice
-                bleDataWorker.initWorker(this@MainActivity,bluetoothDevice)
+            if (!er2Connect) {
+                er2Connect = true
+                er2 = bluetoothDevice
+                bleDataWorker.initWorker(this@MainActivity, bluetoothDevice)
                 dataScope.launch {
                     bleDataWorker.waitConnect()
-                    Timer().schedule(getPinTimer, Date(),500)
+                    Timer().schedule(getPinTimer, Date(), 500)
                 }
 
             }
@@ -95,32 +89,33 @@ class MainActivity : AppCompatActivity(), BleScanManager.Scan {
         }
     }
 
-    var begina=0
+    var begina = 0
+
     inner class PinTimerTask() : TimerTask() {
         override fun run() {
             dataScope.launch {
-                val x=bleDataWorker.getData()
-                 x.wave.wFs?.let {
+                val x = bleDataWorker.getData()
+                x.wave.wFs?.let {
 
 
-                     for(k in it){
-                         val doubleArray: DoubleArray? = filter(k.toDouble(), reset = false)
-                         doubleArray?.run {
-                             if(doubleArray.isNotEmpty()){
-                                 for(j in doubleArray){
-                                     da.add(j.toFloat())
-                                 }
+                    for (k in it) {
+                        val doubleArray: DoubleArray? = filter(k.toDouble(), reset = false)
+                        doubleArray?.run {
+                            if (doubleArray.isNotEmpty()) {
+                                for (j in doubleArray) {
+                                    da.add(j.toFloat())
+                                }
 
-                             }
-                         }
+                            }
+                        }
 
-                     }
+                    }
                 }
 
-                if(da.size>200){
-                    if(begina==0){
-                        begina=1
-                        Timer().schedule(dr, Date(),32)
+                if (da.size > 200) {
+                    if (begina == 0) {
+                        begina = 1
+                        Timer().schedule(dr, Date(), 32)
                     }
                 }
 
@@ -129,8 +124,7 @@ class MainActivity : AppCompatActivity(), BleScanManager.Scan {
     }
 
 
-
-    fun add(ori: FloatArray?, add:FloatArray): FloatArray {
+    fun add(ori: FloatArray?, add: FloatArray): FloatArray {
         if (ori == null) {
             return add
         }
@@ -148,44 +142,42 @@ class MainActivity : AppCompatActivity(), BleScanManager.Scan {
     }
 
 
+    var da: ArrayList<Float> = ArrayList()
+    var currentIndex = 0
+    val dr = DrawTask()
+    var ccx = 0;
 
-
-    var da:ArrayList<Float> = ArrayList()
-    var currentIndex=0
-    val dr=DrawTask()
-    var ccx=0;
     inner class DrawTask() : TimerTask() {
         override fun run() {
 
-                for(k in 0 until 4){
-                    if(da.isNotEmpty()){
-                        waveView.data[currentIndex]= (da[0]*200).toInt()
-                        da.removeAt(0)
-                    }else{
-                        break
-                    }
-                    currentIndex++
-                    if(currentIndex>=500){
-                        currentIndex-=500
-                    }
-
+            for (k in 0 until 4) {
+                if (da.isNotEmpty()) {
+                    waveView.data[currentIndex] = (da[0] * 200).toInt()
+                    da.removeAt(0)
+                } else {
+                    break
+                }
+                currentIndex++
+                if (currentIndex >= 500) {
+                    currentIndex -= 500
                 }
 
-                    waveView.invalidate()
+            }
 
+            waveView.invalidate()
 
 
         }
     }
 
 
-    var getPinTimer=PinTimerTask()
+    var getPinTimer = PinTimerTask()
 
     fun getFi(view: View) {
 
         dataScope.launch {
-            val x=bleDataWorker.getData()
-            Log.e("ga","${x.wave.len}")
+            val x = bleDataWorker.getData()
+            Log.e("ga", "${x.wave.len}")
         }
     }
 }

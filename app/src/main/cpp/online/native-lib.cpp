@@ -25,7 +25,7 @@ static StreamSwtQua streamSwtQua;
 extern "C"
 JNIEXPORT jdoubleArray JNICALL
 Java_com_viatom_er2_activity_MainActivity_00024Companion_filter(JNIEnv *env, jobject thiz,
-                                                                 jdouble f, jboolean reset) {
+                                                                jdouble f, jboolean reset) {
 
     if (reset) {
         streamSwtQua.ResetMe();
@@ -33,18 +33,15 @@ Java_com_viatom_er2_activity_MainActivity_00024Companion_filter(JNIEnv *env, job
     }
 
 
-    deque <double> outputPoints;
+    deque<double> outputPoints;
     streamSwtQua.GetEcgData(f, outputPoints);
     double *arrays = 0;
-    if(outputPoints.empty())
-    {
-        arrays = (double *)malloc(sizeof(double)*7);
-        memset(arrays,'\0',sizeof(arrays));
-    } else
-    {
-        arrays = (double *)malloc(sizeof(double)*outputPoints.size());
-        for(int i = 0; i < outputPoints.size(); i++ )
-        {
+    if (outputPoints.empty()) {
+        arrays = (double *) malloc(sizeof(double) * 7);
+        memset(arrays, '\0', sizeof(arrays));
+    } else {
+        arrays = (double *) malloc(sizeof(double) * outputPoints.size());
+        for (int i = 0; i < outputPoints.size(); i++) {
             arrays[i] = outputPoints[i];
         }
     }
@@ -58,9 +55,9 @@ Java_com_viatom_er2_activity_MainActivity_00024Companion_filter(JNIEnv *env, job
     return result;
 }
 
-JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
-    JNIEnv* env;
-    if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
+JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
+    JNIEnv *env;
+    if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) != JNI_OK) {
         return -1;
     }
     streamSwtQua = StreamSwtQua();

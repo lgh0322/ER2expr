@@ -11,16 +11,12 @@
 using namespace std;
 
 
-
-int DoubleCompares(double doubleNum1, double doubleNum2)
-{
-    if (fabs(doubleNum1 - doubleNum2) < 1e-9)
-    {
+int DoubleCompares(double doubleNum1, double doubleNum2) {
+    if (fabs(doubleNum1 - doubleNum2) < 1e-9) {
         return 0;
     }
 
-    if (doubleNum1 > doubleNum2)
-    {
+    if (doubleNum1 > doubleNum2) {
         return 1;
     }
 
@@ -28,20 +24,16 @@ int DoubleCompares(double doubleNum1, double doubleNum2)
 }
 
 
-double DoubleTripToZero(double doubleNum)
-{
-    if (fabs(doubleNum) < 1e-4)
-    {
+double DoubleTripToZero(double doubleNum) {
+    if (fabs(doubleNum) < 1e-4) {
         return 0;
     }
 
     return doubleNum;
 }
 
-double StringToDouble(string str)
-{
-    if (str == "")
-    {
+double StringToDouble(string str) {
+    if (str == "") {
         return 0;
     }
     istringstream iss(str);
@@ -51,10 +43,8 @@ double StringToDouble(string str)
 }
 
 
-int DoubleIsTooNear(double doubleNum1, double doubleNum2)
-{
-    if (fabs(doubleNum1 - doubleNum2) < 1e-8)
-    {
+int DoubleIsTooNear(double doubleNum1, double doubleNum2) {
+    if (fabs(doubleNum1 - doubleNum2) < 1e-8) {
         return 1;
     }
 
@@ -62,26 +52,21 @@ int DoubleIsTooNear(double doubleNum1, double doubleNum2)
 }
 
 
-void DataStreamStatistic::ResetMe()
-{
+void DataStreamStatistic::ResetMe() {
     mean = 0;
     squareMean = 0;
     sampleCnt = 0;
 }
 
-double DataStreamStatistic::DssMeanAdd91PercentStd(double data)
-{
+double DataStreamStatistic::DssMeanAdd91PercentStd(double data) {
     double sd;
     double std;
 
-    if (sampleCnt == 0)
-    {
+    if (sampleCnt == 0) {
         mean = data;
         squareMean = data * data;
         sd = 0;
-    }
-    else
-    {
+    } else {
         mean /= (sampleCnt + 1);
         mean *= sampleCnt;
         mean += (data / (sampleCnt + 1));
@@ -107,8 +92,7 @@ double DataStreamStatistic::DssMeanAdd91PercentStd(double data)
     double stdPercent = 0.8;//(sqrt(sd) - mean - 538.9) * 0.37 / 870.7 + 0.55;
     double cPercent = 0;
 
-    if (0 != DoubleCompares(mean, 0) && 0 != DoubleCompares(std, 0))
-    {
+    if (0 != DoubleCompares(mean, 0) && 0 != DoubleCompares(std, 0)) {
         meanPercent *= fabs(std / mean);
         stdPercent *= fabs(std / mean);
     }
@@ -129,19 +113,15 @@ double DataStreamStatistic::DssMeanAdd91PercentStd(double data)
     return res;
 }
 
-double DataStreamStatistic::DssMeanDec25PercentStd(double data)
-{
+double DataStreamStatistic::DssMeanDec25PercentStd(double data) {
     double sd;
     double std;
 
-    if (sampleCnt == 0)
-    {
+    if (sampleCnt == 0) {
         mean = data;
         squareMean = data * data;
         sd = 0;
-    }
-    else
-    {
+    } else {
         mean /= (sampleCnt + 1);
         mean *= sampleCnt;
         mean += (data / (sampleCnt + 1));
@@ -167,8 +147,7 @@ double DataStreamStatistic::DssMeanDec25PercentStd(double data)
     double stdPercent = -0.4;//(sqrt(sd) + mean - 717.14) * 0.33 / 265.9 + 0.4;
     double cPercent = 0;
 
-    if (0 != DoubleCompares(mean, 0) && 0 != DoubleCompares(std, 0))
-    {
+    if (0 != DoubleCompares(mean, 0) && 0 != DoubleCompares(std, 0)) {
         meanPercent *= fabs(std / mean);
         stdPercent *= fabs(std / mean);
     }
@@ -189,28 +168,23 @@ double DataStreamStatistic::DssMeanDec25PercentStd(double data)
     return res;
 }
 
-double DataStreamStatistic::DssDataDivideMean(double data)
-{
+double DataStreamStatistic::DssDataDivideMean(double data) {
     mean /= (sampleCnt + 1);
     mean *= sampleCnt;
     mean += (data / (sampleCnt + 1));
 
     sampleCnt++;
 
-    if (mean == 0)
-    {
+    if (mean == 0) {
         return 0;
-    }
-    else
-    {
+    } else {
         return (data / mean);
     }
 
 }
 
 
-double DataStreamStatistic::DssMean(double data)
-{
+double DataStreamStatistic::DssMean(double data) {
 
     mean /= (sampleCnt + 1);
     mean *= sampleCnt;
@@ -222,19 +196,15 @@ double DataStreamStatistic::DssMean(double data)
 }
 
 
-double DataStreamStatistic::DssStd(double data)
-{
+double DataStreamStatistic::DssStd(double data) {
     double sd;
     double res;
 
-    if (sampleCnt == 0)
-    {
+    if (sampleCnt == 0) {
         mean = data;
         squareMean = data * data;
         sd = 0;
-    }
-    else
-    {
+    } else {
         mean /= (sampleCnt + 1);
         mean *= sampleCnt;
         mean += (data / (sampleCnt + 1));
@@ -250,8 +220,7 @@ double DataStreamStatistic::DssStd(double data)
 
     sampleCnt++;
 
-    if (0 == DoubleCompares(sd, 0))
-    {
+    if (0 == DoubleCompares(sd, 0)) {
         sd = 0;
     }
 
@@ -262,8 +231,7 @@ double DataStreamStatistic::DssStd(double data)
 }
 
 
-DataStreamStatistic::DataStreamStatistic()
-{
+DataStreamStatistic::DataStreamStatistic() {
     ResetMe();
 }
 
