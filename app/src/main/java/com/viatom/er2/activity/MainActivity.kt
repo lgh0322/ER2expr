@@ -12,7 +12,7 @@ import com.viatom.er2.blething.Gua
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
+@ExperimentalUnsignedTypes
 class MainActivity : AppCompatActivity(), BleScanManager.Scan {
     val dataScope = CoroutineScope(Dispatchers.IO)
     private val scan = BleScanManager()
@@ -49,14 +49,14 @@ class MainActivity : AppCompatActivity(), BleScanManager.Scan {
 
     }
 
-    fun getFileList(view: View) {
+    fun View.getFileList() {
         dataScope.launch {
             bleDataWorker.getFileList()
         }
 
     }
 
-    fun fileSize(view: View) {
+    fun View.fileSize() {
         dataScope.launch {
             bleDataWorker.getFile(BleDataWorker.gua.fileList[2])
         }

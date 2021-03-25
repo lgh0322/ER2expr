@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.util.Log
 import com.viatom.er2.blething.BleCmd
+import com.viatom.er2.blething.BleCmd.getRtData
 import com.viatom.er2.blething.BleResponse
 import com.viatom.er2.blething.Formatter
 import com.viatom.er2.blething.Gua.getPathX
@@ -20,10 +21,11 @@ import kotlinx.coroutines.sync.withLock
 import no.nordicsemi.android.ble.data.Data
 import java.io.File
 import kotlin.experimental.inv
-
+@ExperimentalUnsignedTypes
 class BleDataWorker {
     private var pool: ByteArray? = null
     private val fileChannel = Channel<Int>(Channel.CONFLATED)
+    private val RtChannel = Channel<BleResponse.RtData>(Channel.CONFLATED)
     private var fileDataChannel = Channel<ByteArray>(Channel.CONFLATED)
     private val connectChannel = Channel<String>(Channel.CONFLATED)
     private lateinit var myBleDataManager: BleDataManager
@@ -108,9 +110,18 @@ class BleDataWorker {
 
 
 
+
     private fun onResponseReceived(response: BleResponse.Er2Response) {
 
         when(response.cmd) {
+
+            ER2_CMD_RT_DATA->{
+                dataScope.launch {
+                    RtChannel.send(BleResponse.RtData(response.content))
+                }
+
+            }
+
 
             ER2_CMD_READ_FILE_LIST->{
                 gua=Formatter.Er2FileList(response.content)
@@ -221,4 +232,14 @@ class BleDataWorker {
             File(getPathX(file.fileNameString)).writeBytes(file.fileData)
         }
     }
+
+
+
+    suspend fun getData():BleResponse.RtData{
+        mutex.withLock {
+            sendCmd(getRtData())
+            return RtChannel.receive()
+        }
+    }
+
 }
