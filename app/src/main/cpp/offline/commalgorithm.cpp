@@ -7,18 +7,10 @@
 
 #include <iostream>
 #include <sstream>
-//#include <mycross.h>
 
 using namespace std;
 
-//int GetSystemTime()
-//{
-//    struct timeval tp;
-//    gettimeofday(&tp, NULL);
-//    int ms = tp.tv_sec * 1000 + tp.tv_usec / 1000;
-//
-//    return ms;
-//}
+
 
 int DoubleCompares(double doubleNum1, double doubleNum2)
 {

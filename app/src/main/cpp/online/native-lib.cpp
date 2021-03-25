@@ -5,25 +5,21 @@
 #include <jni.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include <sys/time.h>
-#include <stdlib.h>
+#include <ctime>
+#include <cstdlib>
 #include <fcntl.h>
 
 #include <string>
 #include <deque>
 #include <cstdlib>
-#include <string.h>
+#include <cstring>
 // #include "filter_16_v2.cpp"
 #include "streamswtqua.h"
-#include "streamswtqua.cpp"
 #include "commalgorithm.h"
-#include "commalgorithm.cpp"
 #include "swt.h"
-#include "swt.cpp"
 #include <android/log.h>
-#include <assert.h>
+#include <cassert>
 
-#define APPNAME "MyApp"
 static StreamSwtQua streamSwtQua;
 
 extern "C"
@@ -35,11 +31,6 @@ Java_com_viatom_er2_activity_MainActivity_00024Companion_filter(JNIEnv *env, job
         streamSwtQua.ResetMe();
         return (*env).NewDoubleArray(0);
     }
-//
-//
-//    jfloat result = Smooth(Filter_Low16_ECG(f, 0));
-//
-//    return result;
 
 
     deque <double> outputPoints;
@@ -59,7 +50,6 @@ Java_com_viatom_er2_activity_MainActivity_00024Companion_filter(JNIEnv *env, job
     }
 
     long length = outputPoints.size();
-//    __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "length == %ld", length);
 
     jsize size = (jsize) outputPoints.size();
     jdoubleArray result = (*env).NewDoubleArray(size);
@@ -74,8 +64,6 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
         return -1;
     }
     streamSwtQua = StreamSwtQua();
-    // Get jclass with env->FindClass.
-    // Register methods with env->RegisterNatives.
 
     return JNI_VERSION_1_6;
 }

@@ -21,11 +21,17 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
+        online/streamswtqua.cpp
+        online/commalgorithm.cpp
+        online/swt.cpp
         online/native-lib.cpp
         )
 add_library(
         offline-lib
         SHARED
+        offline/streamswtqua.cpp
+        offline/commalgorithm.cpp
+        offline/swt.cpp
         offline/native-lib.cpp
 )
 
