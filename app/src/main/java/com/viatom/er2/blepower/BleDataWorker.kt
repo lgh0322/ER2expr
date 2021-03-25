@@ -176,7 +176,6 @@ class BleDataWorker {
                     dataScope.launch {
                         connectChannel.send("yes")
                     }
-
                 }
                 .enqueue()
         }

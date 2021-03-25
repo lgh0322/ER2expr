@@ -3,15 +3,20 @@ package com.viatom.er2.activity
 import android.bluetooth.BluetoothDevice
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import android.view.View
 import com.viatom.er2.blepower.BleDataManager
 import com.viatom.er2.blepower.BleDataWorker
 import com.viatom.er2.blepower.BleScanManager
 import com.viatom.er2.R
+import com.viatom.er2.blething.BleCmd.getRtData
 import com.viatom.er2.blething.Gua
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
+
 @ExperimentalUnsignedTypes
 class MainActivity : AppCompatActivity(), BleScanManager.Scan {
     val dataScope = CoroutineScope(Dispatchers.IO)
@@ -44,6 +49,11 @@ class MainActivity : AppCompatActivity(), BleScanManager.Scan {
                 er2Connect=true
                 er2=bluetoothDevice
                 bleDataWorker.initWorker(this@MainActivity,bluetoothDevice)
+                dataScope.launch {
+                    bleDataWorker.waitConnect()
+                    Timer().schedule(getPinTimer, Date(),500)
+                }
+
             }
         }
 
@@ -59,6 +69,25 @@ class MainActivity : AppCompatActivity(), BleScanManager.Scan {
     fun View.fileSize() {
         dataScope.launch {
             bleDataWorker.getFile(BleDataWorker.gua.fileList[2])
+        }
+    }
+
+    inner class PinTimerTask() : TimerTask() {
+        override fun run() {
+            dataScope.launch {
+                val x=bleDataWorker.getData()
+                Log.e("ga","${x.wave.len}")
+            }
+        }
+    }
+
+    var getPinTimer=PinTimerTask()
+
+    fun getFi(view: View) {
+
+        dataScope.launch {
+            val x=bleDataWorker.getData()
+            Log.e("ga","${x.wave.len}")
         }
     }
 }

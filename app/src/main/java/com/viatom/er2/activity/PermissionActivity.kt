@@ -60,7 +60,7 @@ class PermissionActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    fun initA() {
+    private fun initA() {
         if (!isLocationEnabled()) {
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             startActivityForResult(intent, REQUEST_LOCATION)
@@ -69,7 +69,7 @@ class PermissionActivity : AppCompatActivity() {
         }
     }
 
-    fun initB() {
+    private fun initB() {
         val bluetoothManager =
             getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         val bluetoothAdapter = bluetoothManager.adapter
