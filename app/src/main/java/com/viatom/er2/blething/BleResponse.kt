@@ -1,8 +1,8 @@
 package com.viatom.er2.blething
 
+import com.viatom.er2.blething.WaveUtil.byteTomV
 import com.viatom.er2.utils.toUInt
-import kotlin.experimental.and
-import kotlin.experimental.or
+
 @ExperimentalUnsignedTypes
 object BleResponse {
     class Er2Response  (var bytes: ByteArray){
@@ -55,11 +55,11 @@ object BleResponse {
                 wFs!![i] = byteTomV(wave[2 * i], wave[2 * i + 1])
             }
         }
-        private fun byteTomV(a: Byte, b: Byte): Float {
-            if (a == 0xff.toByte() && b == 0x7f.toByte()) return 0f
-            val n = a.toUByte().toInt()+b.toUByte().toInt()*256
-            return (n * (1.0035 * 1800) / (4096 * 178.74)).toFloat()
-        }
+//        private fun byteTomV(a: Byte, b: Byte): Float {
+//            if (a == 0xff.toByte() && b == 0x7f.toByte()) return 0f
+//            val n = a.toUByte().toInt()+b.toUByte().toInt()*256
+//            return (n * (1.0035 * 1800) / (4096 * 178.74)).toFloat()
+//        }
     }
 
 }

@@ -130,8 +130,10 @@ class MainActivity : AppCompatActivity(), BleScanManager.Scan {
                 for(k in 0 until 4){
 
                     if(da.isNotEmpty()){
-                        waveView.data[currentIndex]= da[0].toInt()
+                        waveView.data[currentIndex]= (da[0]*200).toInt()
                         da.removeAt(0)
+                    }else{
+                        break
                     }
                     currentIndex++
                     if(currentIndex>=500){
