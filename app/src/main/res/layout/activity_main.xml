@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
     <com.viatom.er2.view.WaveView
+        android:id="@+id/wave"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,5 +1,6 @@
 package com.viatom.er2.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
@@ -22,7 +23,14 @@ class WaveView : View {
     var canvas: Canvas? = null
     private val wavePaint = Paint()
     private val bgPaint = Paint()
-    var backG: Bitmap? = null
+
+
+    private val drawSize=500
+    val data=IntArray(drawSize){
+        0
+    }
+    var drawFra:Int=1
+
     constructor(context: Context?) : super(context) {
         init()
     }
@@ -57,28 +65,47 @@ class WaveView : View {
     }
 
     var ixn=0;
-    var backC: Canvas? = null
+    lateinit var backG: Bitmap
+   lateinit var backC: Canvas
+    lateinit var forC: Canvas
+    lateinit var forG: Bitmap
+    lateinit var w:Rect
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if(ixn==0) {
             ixn= 1;
             backG = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            backC = Canvas(backG!!)
-            backC!!.drawARGB(255, 255, 255, 255)
+            forG = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            w= Rect(0,0,width,height)
+            backC = Canvas(backG)
+            backC.drawARGB(255, 255, 255, 255)
+            forC = Canvas(forG)
             val h1=35
             val h2=height/h1
             for(k in 0 until h1+2){
-               backC!!.drawLine(0f,k*h2.toFloat(),width.toFloat(),k*h2.toFloat(),bgPaint)
+               backC.drawLine(0f,k*h2.toFloat(),width.toFloat(),k*h2.toFloat(),bgPaint)
             }
 
             val w1=60
             val w2=width/w1
             for(k in 0 until w1+2){
-                backC!!.drawLine(k*w2.toFloat(),0f,k*w2.toFloat(),height.toFloat(),bgPaint)
+                backC.drawLine(k*w2.toFloat(),0f,k*w2.toFloat(),height.toFloat(),bgPaint)
             }
 
+
+            drawFra=width/drawSize
+
         }
-        canvas.drawBitmap(backG!!, Rect(0,0,width,height), Rect(0,0,width,height),wavePaint)
+        forC.drawBitmap(backG,w, w,wavePaint)
+
+        for((index,h) in data.withIndex()){
+            if(index==data.size-1){
+                break;
+            }
+            forC.drawLine(4*index.toFloat(),height/2- h.toFloat(),4*(index+1.toFloat()),height/2-data[index+1].toFloat(),wavePaint)
+        }
+
+        canvas.drawBitmap(forG, w, w,wavePaint)
     }
 
 
@@ -86,16 +113,6 @@ class WaveView : View {
         canvas.drawColor(getColor(R.color.black))
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        val x=event!!.x.toInt()
-        val y=event!!.y.toInt()
-        ga?.yes(x,y)
-        backC?.drawRect(Rect(x-10,y-10,x+10,y+10),wavePaint)
-        invalidate()
-
-
-        return true
-    }
 
     private fun getColor(resource_id: Int): Int {
         return ContextCompat.getColor(context, resource_id)
